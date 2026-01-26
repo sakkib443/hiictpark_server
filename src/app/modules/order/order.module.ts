@@ -36,6 +36,13 @@ export interface IOrder {
     paymentMethod: string;
     transactionId?: string;
     orderDate: Date;
+    manualPaymentDetails?: {
+        method: string;
+        senderNumber: string;
+        transactionId: string;
+        time: string;
+        date: string;
+    };
     createdAt?: Date;
     updatedAt?: Date;
 }
@@ -62,6 +69,13 @@ const orderSchema = new Schema<IOrder>(
         },
         paymentMethod: { type: String, default: 'stripe' },
         transactionId: { type: String },
+        manualPaymentDetails: {
+            method: { type: String },
+            senderNumber: { type: String },
+            transactionId: { type: String },
+            time: { type: String },
+            date: { type: String }
+        },
         orderDate: { type: Date, default: Date.now },
     },
     { timestamps: true }
@@ -266,6 +280,30 @@ const OrderService = {
         ]);
         return { data: orders, total };
     },
+
+    async submitManualPayment(orderId: string, userId: string, details: any): Promise<IOrder> {
+        const order = await Order.findOne({ _id: orderId, user: userId });
+        if (!order) throw new AppError(404, 'Order not found');
+
+        const updatedOrder = await Order.findByIdAndUpdate(
+            orderId,
+            {
+                paymentMethod: 'manual',
+                manualPaymentDetails: {
+                    method: details.method,
+                    senderNumber: details.senderNumber,
+                    transactionId: details.transactionId,
+                    time: details.time,
+                    date: details.date
+                },
+                transactionId: details.transactionId // Map the main transaction ID too
+            },
+            { new: true }
+        );
+
+        if (!updatedOrder) throw new AppError(404, 'Order not found');
+        return updatedOrder;
+    },
 };
 
 // ==================== CONTROLLER ====================
@@ -314,6 +352,13 @@ const OrderController = {
         const order = await OrderService.updatePaymentStatus(req.params.id, status, transactionId);
         sendResponse(res, { statusCode: 200, success: true, message: 'Order updated', data: order });
     }),
+
+    submitManualPayment: catchAsync(async (req: Request, res: Response) => {
+        const orderId = req.params.id;
+        const userId = req.user!.userId;
+        const order = await OrderService.submitManualPayment(orderId, userId, req.body);
+        sendResponse(res, { statusCode: 200, success: true, message: 'Manual payment submitted successfully', data: order });
+    }),
 };
 
 // ==================== ROUTES ====================
@@ -322,6 +367,7 @@ const router = express.Router();
 router.post('/', authMiddleware, validateRequest(createOrderValidation), OrderController.createOrder);
 router.get('/my', authMiddleware, OrderController.getMyOrders);
 router.get('/my/:id', authMiddleware, OrderController.getOrderById);
+router.patch('/:id/manual-payment', authMiddleware, OrderController.submitManualPayment);
 
 // Admin
 router.get('/admin/all', authMiddleware, authorizeRoles('admin'), OrderController.getAllOrders);
