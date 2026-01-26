@@ -57,6 +57,8 @@ app.use(cookieParser());
 const allowedOrigins = [
   config.frontend_url,
   'http://localhost:3000',
+  'https://hiictpark.vercel.app',
+  'https://hiictpark-frontend.vercel.app',
   'https://ejobsit.vercel.app',
   'https://ejobs-it.vercel.app',
 ].filter(Boolean);
