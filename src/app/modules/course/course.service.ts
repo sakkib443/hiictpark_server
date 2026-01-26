@@ -277,7 +277,8 @@ const getFeaturedCourses = async (limit: number = 6): Promise<ICourse[]> => {
     const courses = await Course.find({ isFeatured: true, status: 'published' })
         .populate('category', 'name nameEn icon')
         .sort({ createdAt: -1 })
-        .limit(limit);
+        .limit(limit)
+        .lean();
 
     return courses;
 };
@@ -290,7 +291,8 @@ const getPopularCourses = async (limit: number = 6): Promise<ICourse[]> => {
     const courses = await Course.find({ status: 'published' })
         .populate('category', 'name nameEn icon')
         .sort({ totalEnrollments: -1, averageRating: -1 })
-        .limit(limit);
+        .limit(limit)
+        .lean();
 
     return courses;
 };
@@ -310,7 +312,8 @@ const getCoursesByCategory = async (
         .populate('category', 'name nameEn icon')
         .sort({ createdAt: -1 })
         .skip(skip)
-        .limit(limit);
+        .limit(limit)
+        .lean();
 
     const total = await Course.countDocuments({ category: categoryId, status: 'published' });
 
