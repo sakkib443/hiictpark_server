@@ -44,6 +44,13 @@ import { BlogRoutes } from './app/modules/blog/blog.routes';
 const app: Application = express();
 
 // ==================== Global Middlewares ====================
+
+// Debugging Middleware - Log all incoming requests
+app.use((req: Request, res: Response, next) => {
+  console.log(`[REQUEST] ${req.method} ${req.url}`);
+  next();
+});
+
 // JSON body parser
 app.use(express.json({ limit: '10mb' }));
 
