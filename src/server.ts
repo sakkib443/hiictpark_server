@@ -28,30 +28,27 @@ declare global {
 }
 
 const cached: CachedConnection = global.mongooseCache || { conn: null, promise: null };
+
 if (!global.mongooseCache) {
   global.mongooseCache = cached;
 }
 
 export async function connectDB(): Promise<typeof mongoose> {
-  // যদি আগে থেকে connected থাকে, সেটা return করো
   if (cached.conn) {
-    console.log('⚡ Using cached MongoDB connection');
     return cached.conn;
   }
 
-  // যদি connection promise না থাকে, নতুন তৈরি করো
   if (!cached.promise) {
     const opts: mongoose.ConnectOptions = {
-      // bufferCommands: true রাখা হয়েছে যাতে query wait করে connection হওয়া পর্যন্ত
-      bufferCommands: true,
+      bufferCommands: false, // Disable buffering to fail fast if no connection
       maxPoolSize: 10,
-      serverSelectionTimeoutMS: 10000,
+      serverSelectionTimeoutMS: 5000, // Lower timeout for faster failure/retry
       socketTimeoutMS: 45000,
     };
 
-    console.log('🔌 Creating new MongoDB connection...');
+    console.log('🔌 Connecting to MongoDB...');
     cached.promise = mongoose.connect(config.database_url, opts).then((mongoose) => {
-      console.log('✅ MongoDB connected successfully!');
+      console.log('✅ MongoDB Connected');
       return mongoose;
     });
   }
@@ -60,7 +57,7 @@ export async function connectDB(): Promise<typeof mongoose> {
     cached.conn = await cached.promise;
   } catch (error) {
     cached.promise = null;
-    console.error('❌ MongoDB connection failed:', error);
+    console.error('❌ MongoDB Connection Error:', error);
     throw error;
   }
 

@@ -46,9 +46,16 @@ const app: Application = express();
 // ==================== Global Middlewares ====================
 
 // Debugging Middleware - Log all incoming requests
-app.use((req: Request, res: Response, next) => {
+app.use(async (req: Request, res: Response, next) => {
   console.log(`[REQUEST] ${req.method} ${req.url}`);
-  next();
+  try {
+    // Ensure DB is connected for every request
+    await import('./server').then(m => m.connectDB());
+    next();
+  } catch (error) {
+    console.error('Database connection failed during request', error);
+    next(error);
+  }
 });
 
 // JSON body parser
