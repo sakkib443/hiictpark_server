@@ -1,5 +1,5 @@
 // ===================================================================
-// eJobsIT LMS - Blog Controller
+// Hi Ict Park LMS - Blog Controller
 // HTTP request handlers for Blog module
 // ব্লগ মডিউলের HTTP রিকোয়েস্ট হ্যান্ডলার
 // ===================================================================

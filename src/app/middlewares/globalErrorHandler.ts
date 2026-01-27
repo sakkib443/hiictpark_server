@@ -1,5 +1,5 @@
 // ===================================================================
-// ejobsit Backend - Global Error Handler
+// Hi Ict Park Backend - Global Error Handler
 // সব error এক জায়গায় handle করার জন্য middleware
 // ===================================================================
 

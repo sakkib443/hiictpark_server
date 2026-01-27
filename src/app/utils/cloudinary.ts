@@ -1,5 +1,5 @@
 // ===================================================================
-// ExtraWeb Backend - Cloudinary Configuration
+// Hi Ict Park Backend - Cloudinary Configuration
 // Image upload setup using Cloudinary
 // ===================================================================
 
@@ -34,7 +34,7 @@ const createStorage = (folder: string) => {
             const format = formatMap[ext] || 'auto';
 
             return {
-                folder: `ejobsit/${folder}`,
+                folder: `hiictpark/${folder}`,
                 format: format,
                 transformation: [
                     { quality: 'auto:good' }
@@ -51,7 +51,7 @@ const createRawStorage = (folder: string) => {
         cloudinary: cloudinary,
         params: async (req, file) => {
             return {
-                folder: `ejobsit/${folder}`,
+                folder: `hiictpark/${folder}`,
                 resource_type: 'raw', // Important: raw for non-image files
                 public_id: `${Date.now()}-${file.originalname.split('.')[0]}`,
             };

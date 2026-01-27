@@ -1,5 +1,5 @@
 // ===================================================================
-// eJobsIT LMS - Blog Interface
+// Hi Ict Park LMS - Blog Interface
 // Blog module TypeScript interface definitions
 // ব্লগ মডিউলের TypeScript interface definitions
 // ===================================================================

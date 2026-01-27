@@ -1,5 +1,5 @@
 // ===================================================================
-// MotionBoss - Page Content Interface
+// Hi Ict Park - Page Content Interface
 // Dynamic content management for all website pages
 // ===================================================================
 
@@ -120,7 +120,7 @@ export const PAGE_DEFINITIONS: IPageDefinition[] = [
                     { key: 'dynamicTextsBn', label: 'Typing Animation Texts (Bengali)', type: 'array', placeholder: 'প্রফেশনাল কোর্স, সফটওয়্যার টুলস' },
                     { key: 'description.text', label: 'Description', type: 'textarea', placeholder: 'Access thousands of premium courses...' },
                     { key: 'description.textBn', label: 'Description (Bengali)', type: 'textarea', placeholder: 'হাজার হাজার প্রিমিয়াম কোর্স...' },
-                    { key: 'description.brandName', label: 'Brand Name (Highlighted)', type: 'text', placeholder: 'eJobsIT' },
+                    { key: 'description.brandName', label: 'Brand Name (Highlighted)', type: 'text', placeholder: 'Hi Ict Park' },
                     { key: 'searchPlaceholder.text', label: 'Search Placeholder', type: 'text', placeholder: 'Search courses, software...' },
                     { key: 'searchPlaceholder.textBn', label: 'Search Placeholder (Bengali)', type: 'text', placeholder: 'কোর্স, সফটওয়্যার খুঁজুন...' },
                     { key: 'stats.activeUsers', label: 'Active Users Count', type: 'number', defaultValue: 5000 },

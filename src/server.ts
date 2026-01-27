@@ -1,5 +1,5 @@
 // ===================================================================
-// MotionBoss LMS - Server Entry Point (Vercel Serverless Compatible)
+// Hi Ict Park LMS - Server Entry Point (Vercel Serverless Compatible)
 // সার্ভার শুরু করার মূল ফাইল - MongoDB connect এবং server start
 // ===================================================================
 
@@ -102,7 +102,7 @@ if (process.env.NODE_ENV !== 'production') {
     console.log('');
     console.log('╔══════════════════════════════════════════════╗');
     console.log('║                                              ║');
-    console.log('║   🎓 MotionBoss LMS Server Started!          ║');
+    console.log('║   🎓 Hi Ict Park LMS Server Started!        ║');
     console.log('║                                              ║');
     console.log(`║   🌐 URL: http://localhost:${config.port}               ║`);
     console.log(`║   🔧 Environment: ${config.env.padEnd(21)}   ║`);

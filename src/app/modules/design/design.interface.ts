@@ -1,5 +1,5 @@
 // ===================================================================
-// MotionBoss LMS - Design Interface
+// Hi Ict Park LMS - Design Interface
 // Website Design/Content management module
 // ওয়েবসাইট ডিজাইন এবং কন্টেন্ট ম্যানেজমেন্ট
 // ===================================================================
@@ -27,7 +27,7 @@ export interface IHeroContent {
     description: {
         text: string;
         textBn: string;
-        brandName: string;        // e.g., "eJobsIT"
+        brandName: string;        // e.g., "Hi Ict Park"
     };
     features: {
         text: string;

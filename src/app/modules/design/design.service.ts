@@ -1,5 +1,5 @@
 // ===================================================================
-// MotionBoss LMS - Design Service
+// Hi Ict Park LMS - Design Service
 // Business logic for Design module
 // ===================================================================
 
@@ -31,7 +31,7 @@ const getDesignBySection = async (section: string): Promise<IDesign | null> => {
                 description: {
                     text: 'Access thousands of premium courses, software, and digital products. Built by experts, ready for you to launch in minutes.',
                     textBn: 'হাজার হাজার প্রিমিয়াম কোর্স, সফটওয়্যার এবং ডিজিটাল প্রোডাক্ট অ্যাক্সেস করুন। বিশেষজ্ঞদের দ্বারা তৈরি।',
-                    brandName: 'eJobsIT'
+                    brandName: 'Hi Ict Park'
                 },
                 features: [
                     { text: 'Instant Access', textBn: 'তাৎক্ষণিক অ্যাক্সেস' },
@@ -70,7 +70,7 @@ const getDesignBySection = async (section: string): Promise<IDesign | null> => {
                     subtitleBn: 'কোনো প্রশ্ন আছে? আমাদের মেসেজ পাঠান, আমরা যত তাড়াতাড়ি সম্ভব উত্তর দেব।'
                 },
                 contactInfo: {
-                    email: 'info@ejobsit.com',
+                    email: 'info@Hi Ict Park.com',
                     phone: '+88 01730481212',
                     address: 'Daisy Garden, House 14 (Level-5), Block A, Banasree, Dhaka',
                     addressBn: 'ডেইজি গার্ডেন, বাড়ি ১৪ (লেভেল-৫), ব্লক এ, বনশ্রী, ঢাকা',
@@ -78,11 +78,11 @@ const getDesignBySection = async (section: string): Promise<IDesign | null> => {
                     officeHoursBn: 'শনি - বৃহস্পতি: সকাল ১০টা - সন্ধ্যা ৬টা'
                 },
                 socialLinks: {
-                    facebook: 'https://www.facebook.com/ejobsit',
-                    youtube: 'https://www.youtube.com/@ejobsit',
-                    linkedin: 'https://www.linkedin.com/company/ejobsit',
+                    facebook: 'https://www.facebook.com/Hi Ict Park',
+                    youtube: 'https://www.youtube.com/@Hi Ict Park',
+                    linkedin: 'https://www.linkedin.com/company/Hi Ict Park',
                     whatsapp: 'https://wa.me/8801730481212',
-                    instagram: 'https://www.instagram.com/ejobsit/'
+                    instagram: 'https://www.instagram.com/Hi Ict Park/'
                 },
                 whatsappSection: {
                     title: 'Need Quick Help?',

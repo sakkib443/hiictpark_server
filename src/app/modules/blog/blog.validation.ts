@@ -1,5 +1,5 @@
 // ===================================================================
-// eJobsIT LMS - Blog Validation
+// Hi Ict Park LMS - Blog Validation
 // Zod validation schemas for Blog module
 // ব্লগ মডিউলের ভ্যালিডেশন স্কিমা
 // ===================================================================

@@ -1,5 +1,5 @@
 // ===================================================================
-// ejobs it LMS - Main Application File
+// Hi Ict Park LMS - Main Application File
 // Express app setup with all routes and middleware
 // মূল এপ্লিকেশন ফাইল - সব routes এবং middleware এখানে connect হয়েছে
 // ===================================================================
@@ -73,8 +73,6 @@ const allowedOrigins = [
   'http://localhost:3000',
   'https://hiictpark.vercel.app',
   'https://hiictpark-frontend.vercel.app',
-  'https://ejobsit.vercel.app',
-  'https://ejobs-it.vercel.app',
 ].filter(Boolean);
 
 app.use(

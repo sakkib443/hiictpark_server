@@ -1,5 +1,5 @@
 // ===================================================================
-// ejobsit Backend - Response Helper
+// Hi Ict Park Backend - Response Helper
 // সব API response এক format এ send করার জন্য helper
 // ===================================================================
 

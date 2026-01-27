@@ -1,5 +1,5 @@
 // ===================================================================
-// MotionBoss LMS - Design Model
+// Hi Ict Park LMS - Design Model
 // Mongoose schema for website design/content
 // ===================================================================
 
@@ -35,7 +35,7 @@ const heroContentSchema = new Schema({
             type: String,
             default: 'সবচেয়ে নির্ভরযোগ্য লার্নিং প্ল্যাটফর্ম'
         },
-        brandName: { type: String, default: 'ejobs it' }
+        brandName: { type: String, default: 'Hi Ict Park' }
     },
     features: [{
         text: { type: String },
@@ -148,7 +148,7 @@ const contactContentSchema = new Schema({
         subtitleBn: { type: String, default: 'কোনো প্রশ্ন আছে? আমাদের মেসেজ পাঠান, আমরা যত তাড়াতাড়ি সম্ভব উত্তর দেব।' }
     },
     contactInfo: {
-        email: { type: String, default: 'info@ejobsit.com' },
+        email: { type: String, default: 'info@hiictpark.com' },
         phone: { type: String, default: '+88 01730481212' },
         address: { type: String, default: 'Daisy Garden, House 14 (Level-5), Block A, Banasree, Dhaka' },
         addressBn: { type: String, default: 'ডেইজি গার্ডেন, বাড়ি ১৪ (লেভেল-৫), ব্লক এ, বনশ্রী, ঢাকা' },
@@ -156,11 +156,11 @@ const contactContentSchema = new Schema({
         officeHoursBn: { type: String, default: 'শনি - বৃহস্পতি: সকাল ১০টা - সন্ধ্যা ৬টা' }
     },
     socialLinks: {
-        facebook: { type: String, default: 'https://www.facebook.com/ejobsit' },
-        youtube: { type: String, default: 'https://www.youtube.com/@ejobsit' },
-        linkedin: { type: String, default: 'https://www.linkedin.com/company/ejobsit' },
+        facebook: { type: String, default: 'https://www.facebook.com/hiictpark' },
+        youtube: { type: String, default: 'https://www.youtube.com/@hiictpark' },
+        linkedin: { type: String, default: 'https://www.linkedin.com/company/hiictpark' },
         whatsapp: { type: String, default: 'https://wa.me/8801730481212' },
-        instagram: { type: String, default: 'https://www.instagram.com/ejobsit/' }
+        instagram: { type: String, default: 'https://www.instagram.com/hiictpark/' }
     },
     whatsappSection: {
         title: { type: String, default: 'Need Quick Help?' },

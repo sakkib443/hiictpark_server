@@ -1,7 +1,7 @@
 {
-  "name": "ejobsit-backend",
+  "name": "hiictpark-backend",
   "version": "1.0.0",
-  "description": "ejobsit Marketplace Backend - ThemeForest style website/software marketplace API",
+  "description": "Hi Ict Park Marketplace Backend - ThemeForest style website/software marketplace API",
   "main": "index.js",
   "scripts": {
     "start:prod": "node ./dist/server.js",
@@ -20,7 +20,7 @@
     "software",
     "api"
   ],
-  "author": "ejobsit Team",
+  "author": "Hi Ict Park Team",
   "license": "ISC",
   "dependencies": {
     "@types/multer": "^2.0.0",
