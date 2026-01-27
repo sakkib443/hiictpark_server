@@ -15,7 +15,7 @@ const scheduleSchema = z.object({
 const createBatchSchema = z.object({
     body: z.object({
         course: z.string({ required_error: 'Course ID is required' }),
-        instructor: z.string({ required_error: 'Instructor ID is required' }),
+        instructor: z.string().optional(),
         batchName: z.string({ required_error: 'Batch name is required' }).min(1),
         batchCode: z.string({ required_error: 'Batch code is required' }).min(1),
         description: z.string().optional(),

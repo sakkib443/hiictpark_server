@@ -29,7 +29,7 @@ export interface IBatch {
 
     // ==================== Core References ====================
     course: Types.ObjectId;           // Course reference (only online courses)
-    instructor: Types.ObjectId;       // Instructor/Mentor reference
+    instructor?: Types.ObjectId;      // Instructor/Mentor reference (optional)
 
     // ==================== Batch Info ====================
     batchName: string;                // "Batch-01", "Morning Batch"

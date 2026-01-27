@@ -36,7 +36,6 @@ const batchSchema = new Schema<IBatch, BatchModel>(
         instructor: {
             type: Schema.Types.ObjectId,
             ref: 'User',
-            required: [true, 'Instructor is required'],
         },
         batchName: {
             type: String,
