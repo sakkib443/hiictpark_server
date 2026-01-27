@@ -29,6 +29,11 @@ const enrollmentSchema = new Schema<IEnrollment, EnrollmentModel>(
             type: Schema.Types.ObjectId,
             ref: 'Order',
         },
+        batch: {
+            type: Schema.Types.ObjectId,
+            ref: 'Batch',
+            index: true,
+        },
 
         // ==================== Enrollment Details ====================
         enrolledAt: {

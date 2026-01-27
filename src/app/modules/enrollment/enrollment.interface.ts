@@ -22,6 +22,7 @@ export interface IEnrollment {
     student: Types.ObjectId;          // User (student) reference
     course: Types.ObjectId;           // Course reference
     order?: Types.ObjectId;           // Payment/Order reference (optional for free courses)
+    batch?: Types.ObjectId;           // Batch reference (for online courses)
 
     // ==================== Enrollment Details ====================
     enrolledAt: Date;                 // When enrolled

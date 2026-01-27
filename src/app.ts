@@ -41,6 +41,8 @@ import { SiteContentRoutes } from './app/modules/siteContent/siteContent.routes'
 import { PageContentRoutes } from './app/modules/pageContent/pageContent.routes';
 import { BlogRoutes } from './app/modules/blog/blog.routes';
 import { DesignTemplateRoutes } from './app/modules/designTemplate/designTemplate.routes';
+import { BatchRoutes } from './app/modules/batch/batch.routes';
+import { LiveClassRoutes } from './app/modules/liveClass/liveClass.routes';
 
 
 // ==================== App Initialization ====================
@@ -197,6 +199,12 @@ app.use('/api/page-content', PageContentRoutes);
 
 // Blog routes (blog posts and comments)
 app.use('/api/blogs', BlogRoutes);
+
+// Batch routes (course batches for online courses)
+app.use('/api/batches', BatchRoutes);
+
+// Live Class routes (live classes for batches)
+app.use('/api/live-classes', LiveClassRoutes);
 
 // ==================== Error Handling ====================
 // 404 Not Found handler (must be after all routes)
