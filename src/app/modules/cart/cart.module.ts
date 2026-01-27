@@ -16,7 +16,8 @@ import validateRequest from '../../middlewares/validateRequest';
 // ==================== INTERFACE ====================
 export interface ICartItem {
     product: Types.ObjectId;
-    productType: 'website' | 'software';
+    productType: 'website' | 'design-template';
+
     price: number;
     title: string;
     image?: string;
@@ -39,7 +40,8 @@ const cartSchema = new Schema<ICart>(
         items: [
             {
                 product: { type: Schema.Types.ObjectId, required: true, refPath: 'items.productType' },
-                productType: { type: String, enum: ['website', 'software'], required: true },
+                productType: { type: String, enum: ['website', 'design-template'], required: true },
+
                 price: { type: Number, required: true },
                 title: { type: String, required: true },
                 image: { type: String },
@@ -57,7 +59,8 @@ export const Cart = model<ICart>('Cart', cartSchema);
 export const addToCartValidation = z.object({
     body: z.object({
         productId: z.string({ required_error: 'Product ID is required' }),
-        productType: z.enum(['website', 'software']),
+        productType: z.enum(['website', 'design-template']),
+
         price: z.number({ required_error: 'Price is required' }),
         title: z.string({ required_error: 'Title is required' }),
         image: z.string().optional(),

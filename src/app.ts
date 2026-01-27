@@ -19,7 +19,8 @@ import { UserRoutes } from './app/modules/user/user.routes';
 import { CategoryRoutes } from './app/modules/category/category.routes';
 import { PlatformRoutes } from './app/modules/platform/platform.routes';
 import { WebsiteRoutes } from './app/modules/website/website.routes';
-import { SoftwareRoutes } from './app/modules/software/software.routes';
+// import { SoftwareRoutes } from './app/modules/software/software.routes';
+
 import { CartRoutes } from './app/modules/cart/cart.module';
 import { WishlistRoutes } from './app/modules/wishlist/wishlist.module';
 import { OrderRoutes } from './app/modules/order/order.module';
@@ -39,6 +40,8 @@ import { CouponRoutes } from './app/modules/coupon/coupon.routes';
 import { SiteContentRoutes } from './app/modules/siteContent/siteContent.routes';
 import { PageContentRoutes } from './app/modules/pageContent/pageContent.routes';
 import { BlogRoutes } from './app/modules/blog/blog.routes';
+import { DesignTemplateRoutes } from './app/modules/designTemplate/designTemplate.routes';
+
 
 // ==================== App Initialization ====================
 const app: Application = express();
@@ -130,8 +133,13 @@ app.use('/api/platforms', PlatformRoutes);
 // Website product routes (main marketplace)
 app.use('/api/websites', WebsiteRoutes);
 
-// Software product routes (scripts & plugins marketplace)
-app.use('/api/software', SoftwareRoutes);
+// Software product routes (scripts & plugins marketplace) - REMOVED
+// app.use('/api/software', SoftwareRoutes);
+
+
+// Design template product routes (new marketplace section)
+app.use('/api/design-templates', DesignTemplateRoutes);
+
 
 // Course routes (LMS - public + admin)
 app.use('/api/courses', CourseRoutes);

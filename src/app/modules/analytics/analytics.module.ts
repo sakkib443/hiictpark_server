@@ -38,7 +38,8 @@ const AnalyticsService = {
         enrollmentsThisMonth: number;
         // Product Stats
         totalWebsites: number;
-        totalSoftware: number;
+        totalDesignTemplates: number;
+
         // Order & Revenue Stats
         totalOrders: number;
         todayOrders: number;
@@ -57,7 +58,8 @@ const AnalyticsService = {
         const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
 
         // Import dynamically to avoid circular dependencies
-        const { Software } = await import('../software/software.model');
+        const { DesignTemplate } = await import('../designTemplate/designTemplate.model');
+
         const { Category } = await import('../category/category.model');
 
         const [
@@ -76,7 +78,8 @@ const AnalyticsService = {
             enrollmentsThisMonth,
             // Product counts
             totalWebsites,
-            totalSoftware,
+            totalDesignTemplates,
+
             // Category count
             totalCategories,
             // Order counts
@@ -86,7 +89,8 @@ const AnalyticsService = {
             completedOrders,
             // Engagement (Sum of likeCount)
             websiteLikes,
-            softwareLikes,
+            designTemplateLikes,
+
             courseLikes,
             // Revenue aggregations
             totalRevenueResult,
@@ -108,7 +112,8 @@ const AnalyticsService = {
             Enrollment.countDocuments({ enrolledAt: { $gte: firstDayOfMonth } }),
             // Product queries
             Website.countDocuments({ isDeleted: false }),
-            Software.countDocuments({ isDeleted: false }),
+            DesignTemplate.countDocuments({ isDeleted: false }),
+
             // Category query
             Category.countDocuments({}),
             // Order queries
@@ -118,7 +123,8 @@ const AnalyticsService = {
             Order.countDocuments({ paymentStatus: 'completed' }),
             // Engagement (Sum of likeCount)
             Website.aggregate([{ $group: { _id: null, total: { $sum: '$likeCount' } } }]),
-            Software.aggregate([{ $group: { _id: null, total: { $sum: '$likeCount' } } }]),
+            DesignTemplate.aggregate([{ $group: { _id: null, total: { $sum: '$likeCount' } } }]),
+
             Course.aggregate([{ $group: { _id: null, total: { $sum: '$likeCount' } } }]),
             // Revenue aggregations
             Order.aggregate([
@@ -151,7 +157,8 @@ const AnalyticsService = {
             enrollmentsThisMonth,
             // Product Stats
             totalWebsites,
-            totalSoftware,
+            totalDesignTemplates,
+
             // Order & Revenue Stats
             totalOrders,
             todayOrders,
@@ -163,7 +170,8 @@ const AnalyticsService = {
             // Category Stats
             totalCategories,
             // Engagement
-            totalLikes: (websiteLikes[0]?.total || 0) + (softwareLikes[0]?.total || 0) + (courseLikes[0]?.total || 0),
+            totalLikes: (websiteLikes[0]?.total || 0) + (designTemplateLikes[0]?.total || 0) + (courseLikes[0]?.total || 0),
+
         };
     },
 
@@ -172,26 +180,30 @@ const AnalyticsService = {
      */
     async getPublicStatistics(): Promise<{
         totalWebsites: number;
-        totalSoftware: number;
+        totalDesignTemplates: number;
+
         totalCustomers: number;
         totalDownloads: number;
         averageRating: number;
         totalReviews: number;
     }> {
-        // Import Software model dynamically to avoid circular dependency
-        const { Software } = await import('../software/software.model');
+        // Import DesignTemplate model dynamically to avoid circular dependency
+        const { DesignTemplate } = await import('../designTemplate/designTemplate.model');
+
         const { Review } = await import('../review/review.module');
 
         const [
             totalWebsites,
-            totalSoftware,
+            totalDesignTemplates,
+
             totalCustomers,
             totalDownloads,
             ratingResult,
             totalReviews,
         ] = await Promise.all([
             Website.countDocuments({ isDeleted: false }),
-            Software.countDocuments({ isDeleted: false }),
+            DesignTemplate.countDocuments({ isDeleted: false }),
+
             User.countDocuments({ isDeleted: false }),
             Order.countDocuments({ paymentStatus: 'completed' }),
             Website.aggregate([
@@ -203,7 +215,8 @@ const AnalyticsService = {
 
         return {
             totalWebsites,
-            totalSoftware,
+            totalDesignTemplates,
+
             totalCustomers,
             totalDownloads,
             averageRating: ratingResult[0]?.avg ? parseFloat(ratingResult[0].avg.toFixed(1)) : 4.8,
@@ -250,7 +263,8 @@ const AnalyticsService = {
         labels: string[];
         courses: number[];
         websites: number[];
-        software: number[];
+        designTemplates: number[];
+
     }> {
         const monthsNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
@@ -270,7 +284,8 @@ const AnalyticsService = {
         const labels: string[] = [];
         const courseRevenue: number[] = new Array(12).fill(0);
         const websiteRevenue: number[] = new Array(12).fill(0);
-        const softwareRevenue: number[] = new Array(12).fill(0);
+        const designTemplateRevenue: number[] = new Array(12).fill(0);
+
 
         // Map month indexes to our array indexes (0-11)
         const monthToIdx: { [key: string]: number } = {};
@@ -301,9 +316,10 @@ const AnalyticsService = {
                         courseRevenue[idx] += amount;
                     } else if (productType === 'website') {
                         websiteRevenue[idx] += amount;
-                    } else if (productType === 'software') {
-                        softwareRevenue[idx] += amount;
+                    } else if (productType === 'design-template' || productType === 'software') {
+                        designTemplateRevenue[idx] += amount;
                     }
+
                 });
             }
         });
@@ -314,8 +330,9 @@ const AnalyticsService = {
             labels,
             courses: courseRevenue,
             websites: websiteRevenue,
-            software: softwareRevenue,
+            designTemplates: designTemplateRevenue,
         };
+
     },
 
     /**

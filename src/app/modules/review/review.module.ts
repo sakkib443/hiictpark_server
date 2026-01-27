@@ -18,7 +18,8 @@ export interface IReview {
     _id?: Types.ObjectId;
     user: Types.ObjectId;
     product: Types.ObjectId;
-    productType: 'website' | 'software' | 'course';
+    productType: 'website' | 'design-template' | 'course';
+
     rating: number;
     title?: string;
     comment: string;
@@ -34,7 +35,8 @@ const reviewSchema = new Schema<IReview>(
     {
         user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
         product: { type: Schema.Types.ObjectId, required: true },
-        productType: { type: String, enum: ['website', 'software', 'course'], required: true },
+        productType: { type: String, enum: ['website', 'design-template', 'course'], required: true },
+
         rating: { type: Number, required: true, min: 1, max: 5 },
         title: { type: String, maxlength: 100 },
         comment: { type: String, required: true, maxlength: 1000 },
@@ -58,9 +60,10 @@ export const Review = model<IReview>('Review', reviewSchema);
 export const ReviewValidationSchema = z.object({
     body: z.object({
         productId: z.string({ required_error: 'Product ID is required' }),
-        productType: z.enum(['website', 'software', 'course'], {
-            errorMap: (issue, ctx) => ({ message: "Product type must be either website, software, or course" })
+        productType: z.enum(['website', 'design-template', 'course'], {
+            errorMap: (issue, ctx) => ({ message: "Product type must be either website, design-template, or course" })
         }),
+
         rating: z.number().min(1).max(5),
         title: z.string().max(100).optional(),
         comment: z.string({ required_error: 'Comment is required' }).max(1000),
@@ -137,9 +140,10 @@ const ReviewService = {
                 if (review.productType === 'website') {
                     const { Website } = await import('../website/website.model');
                     productDetails = await Website.findById(review.product).select('title slug thumbnail images');
-                } else if (review.productType === 'software') {
-                    const { Software } = await import('../software/software.model');
-                    productDetails = await Software.findById(review.product).select('title slug thumbnail images');
+                } else if (review.productType === 'design-template' || review.productType === 'software') {
+                    const { DesignTemplate } = await import('../designTemplate/designTemplate.model');
+                    productDetails = await DesignTemplate.findById(review.product).select('title slug thumbnail images');
+
                 } else if (review.productType === 'course') {
                     const { Course } = await import('../course/course.model');
                     productDetails = await Course.findById(review.product).select('title slug thumbnail image');
@@ -174,9 +178,10 @@ const ReviewService = {
                 if (review.productType === 'website') {
                     const { Website } = await import('../website/website.model');
                     productDetails = await Website.findById(review.product).select('title slug');
-                } else if (review.productType === 'software') {
-                    const { Software } = await import('../software/software.model');
-                    productDetails = await Software.findById(review.product).select('title slug');
+                } else if (review.productType === 'design-template' || review.productType === 'software') {
+                    const { DesignTemplate } = await import('../designTemplate/designTemplate.model');
+                    productDetails = await DesignTemplate.findById(review.product).select('title slug');
+
                 } else if (review.productType === 'course') {
                     const { Course } = await import('../course/course.model');
                     productDetails = await Course.findById(review.product).select('title slug');
@@ -223,9 +228,9 @@ const ReviewService = {
         } else if (productType === 'website') {
             const { Website } = await import('../website/website.model');
             await Website.findByIdAndUpdate(productId, { rating: avgRating, reviewCount: count });
-        } else if (productType === 'software') {
-            const { Software } = await import('../software/software.model');
-            await Software.findByIdAndUpdate(productId, { rating: avgRating, reviewCount: count });
+        } else if (productType === 'design-template') {
+            const { DesignTemplate } = await import('../designTemplate/designTemplate.model');
+            await DesignTemplate.findByIdAndUpdate(productId, { rating: avgRating, reviewCount: count });
         }
     },
 

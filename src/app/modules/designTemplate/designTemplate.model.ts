@@ -1,13 +1,7 @@
-// ===================================================================
-// ExtraWeb Backend - Software Model
-// MongoDB Schema for Software Products
-// Script/Plugin collection for the marketplace
-// ===================================================================
-
 import { Schema, model } from 'mongoose';
-import { ISoftware, PLATFORM_OPTIONS, SOFTWARE_TYPE_OPTIONS } from './software.interface';
+import { IDesignTemplate, DESIGN_PLATFORM_OPTIONS, DESIGN_TYPE_OPTIONS } from './designTemplate.interface';
 
-const softwareSchema = new Schema<ISoftware>(
+const designTemplateSchema = new Schema<IDesignTemplate>(
     {
         // ==================== Basic Info ====================
         title: {
@@ -29,7 +23,7 @@ const softwareSchema = new Schema<ISoftware>(
         },
         platform: {
             type: String,
-            enum: PLATFORM_OPTIONS,
+            enum: DESIGN_PLATFORM_OPTIONS,
             required: [true, 'Platform is required'],
         },
         category: {
@@ -39,10 +33,10 @@ const softwareSchema = new Schema<ISoftware>(
         },
 
         // ==================== Type & Access ====================
-        softwareType: {
+        templateType: {
             type: String,
-            enum: SOFTWARE_TYPE_OPTIONS,
-            required: [true, 'Software type is required'],
+            enum: DESIGN_TYPE_OPTIONS,
+            required: [true, 'Template type is required'],
         },
         accessType: {
             type: String,
@@ -98,19 +92,16 @@ const softwareSchema = new Schema<ISoftware>(
             default: '1.0.0',
         },
         features: [{ type: String }],
-        requirements: [{ type: String }],
-        technologies: [{ type: String }],
+        filesIncluded: [{ type: String }],
         description: {
             type: String,
             required: [true, 'Description is required'],
             maxlength: [1000, 'Description cannot exceed 1000 characters'],
         },
         longDescription: { type: String },
-        changelog: { type: String },
 
         // ==================== Compatibility ====================
-        browserCompatibility: [{ type: String }],
-        softwareCompatibility: [{ type: String }],
+        compatibility: [{ type: String }],
 
         // ==================== Media ====================
         images: [{ type: String }],
@@ -141,31 +132,31 @@ const softwareSchema = new Schema<ISoftware>(
 );
 
 // ==================== Indexes ====================
-softwareSchema.index({ slug: 1 });
-softwareSchema.index({ author: 1 });
-softwareSchema.index({ category: 1 });
-softwareSchema.index({ platform: 1 });
-softwareSchema.index({ status: 1, isDeleted: 1 });
-softwareSchema.index({ price: 1 });
-softwareSchema.index({ rating: -1 });
-softwareSchema.index({ salesCount: -1 });
-softwareSchema.index({ viewCount: -1 });
-softwareSchema.index({ likeCount: -1 });
-softwareSchema.index({ title: 'text', description: 'text' });
+designTemplateSchema.index({ slug: 1 });
+designTemplateSchema.index({ author: 1 });
+designTemplateSchema.index({ category: 1 });
+designTemplateSchema.index({ platform: 1 });
+designTemplateSchema.index({ status: 1, isDeleted: 1 });
+designTemplateSchema.index({ price: 1 });
+designTemplateSchema.index({ rating: -1 });
+designTemplateSchema.index({ salesCount: -1 });
+designTemplateSchema.index({ viewCount: -1 });
+designTemplateSchema.index({ likeCount: -1 });
+designTemplateSchema.index({ title: 'text', description: 'text' });
 
 // ==================== Pre-find Middleware ====================
-softwareSchema.pre('find', function (next) {
+designTemplateSchema.pre('find', function (next) {
     this.find({ isDeleted: { $ne: true } });
     next();
 });
 
-softwareSchema.pre('findOne', function (next) {
+designTemplateSchema.pre('findOne', function (next) {
     this.find({ isDeleted: { $ne: true } });
     next();
 });
 
 // ==================== Auto-generate Slug ====================
-softwareSchema.pre('save', function (next) {
+designTemplateSchema.pre('save', function (next) {
     if (this.isModified('title') && !this.slug) {
         this.slug = this.title
             .toLowerCase()
@@ -176,9 +167,4 @@ softwareSchema.pre('save', function (next) {
     next();
 });
 
-// ==================== Virtual for effective price ====================
-softwareSchema.virtual('effectivePrice').get(function () {
-    return this.offerPrice || this.price;
-});
-
-export const Software = model<ISoftware>('Software', softwareSchema);
+export const DesignTemplate = model<IDesignTemplate>('DesignTemplate', designTemplateSchema);

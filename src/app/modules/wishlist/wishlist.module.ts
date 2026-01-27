@@ -16,9 +16,10 @@ import validateRequest from '../../middlewares/validateRequest';
 // ==================== INTERFACE ====================
 export interface IWishlistItem {
     product: Types.ObjectId;
-    productType: 'website' | 'software' | 'course';
-    productModel: 'Website' | 'Software' | 'Course';
+    productType: 'website' | 'design-template' | 'course';
+    productModel: 'Website' | 'DesignTemplate' | 'Course';
     addedAt: Date;
+
 }
 
 export interface IWishlist {
@@ -34,9 +35,10 @@ const wishlistSchema = new Schema<IWishlist>(
         items: [
             {
                 product: { type: Schema.Types.ObjectId, required: true, refPath: 'items.productModel' },
-                productType: { type: String, enum: ['website', 'software', 'course'], required: true },
-                productModel: { type: String, enum: ['Website', 'Software', 'Course'], required: true },
+                productType: { type: String, enum: ['website', 'design-template', 'course'], required: true },
+                productModel: { type: String, enum: ['Website', 'DesignTemplate', 'Course'], required: true },
                 addedAt: { type: Date, default: Date.now },
+
             },
         ],
     },
@@ -49,7 +51,8 @@ export const Wishlist = model<IWishlist>('Wishlist', wishlistSchema);
 export const addToWishlistValidation = z.object({
     body: z.object({
         productId: z.string({ required_error: 'Product ID is required' }),
-        productType: z.enum(['website', 'software', 'course']),
+        productType: z.enum(['website', 'design-template', 'course']),
+
     }),
 });
 
@@ -97,10 +100,11 @@ const WishlistService = {
         return allFavorites;
     },
 
-    async addToWishlist(userId: string, productId: string, productType: 'website' | 'software' | 'course'): Promise<IWishlist> {
+    async addToWishlist(userId: string, productId: string, productType: 'website' | 'design-template' | 'course'): Promise<IWishlist> {
+
         let wishlist = await Wishlist.findOne({ user: userId });
 
-        const productModel = productType === 'website' ? 'Website' : productType === 'software' ? 'Software' : 'Course';
+        const productModel = productType === 'website' ? 'Website' : productType === 'design-template' ? 'DesignTemplate' : 'Course';
 
         if (!wishlist) {
             wishlist = await Wishlist.create({

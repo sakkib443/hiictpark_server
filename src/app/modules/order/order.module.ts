@@ -20,7 +20,8 @@ import { NotificationService } from '../notification/notification.module';
 // ==================== INTERFACE ====================
 export interface IOrderItem {
     product: Types.ObjectId;
-    productType: 'website' | 'software' | 'course';
+    productType: 'website' | 'design-template' | 'course';
+
     title: string;
     price: number;
     image?: string;
@@ -55,7 +56,8 @@ const orderSchema = new Schema<IOrder>(
         items: [
             {
                 product: { type: Schema.Types.ObjectId, required: true },
-                productType: { type: String, enum: ['website', 'software', 'course'], required: true },
+                productType: { type: String, enum: ['website', 'design-template', 'course'], required: true },
+
                 title: { type: String, required: true },
                 price: { type: Number, required: true },
                 image: { type: String },
@@ -93,7 +95,8 @@ export const createOrderValidation = z.object({
         items: z.array(
             z.object({
                 productId: z.string(),
-                productType: z.enum(['website', 'software', 'course']),
+                productType: z.enum(['website', 'design-template', 'course']),
+
                 title: z.string(),
                 price: z.number(),
                 image: z.string().optional(),
@@ -144,9 +147,9 @@ const deliverOrderItems = async (order: any, rawItems?: any[]): Promise<void> =>
                     item.productType,
                     item.title
                 );
-            } else if (item.productType === 'software') {
-                const { Software } = await import('../software/software.model');
-                await Software.findByIdAndUpdate(productId, { $inc: { salesCount: 1 } });
+            } else if (item.productType === 'design-template' || item.productType === 'software') {
+                const { DesignTemplate } = await import('../designTemplate/designTemplate.model');
+                await DesignTemplate.findByIdAndUpdate(productId, { $inc: { salesCount: 1 } });
                 await DownloadService.createDownloadRecord(
                     userId,
                     order._id!.toString(),
@@ -155,6 +158,7 @@ const deliverOrderItems = async (order: any, rawItems?: any[]): Promise<void> =>
                     item.title
                 );
             }
+
         } catch (error) {
             console.error(`Failed to deliver ${item.title}:`, error);
         }
@@ -187,8 +191,9 @@ const deliverOrderItems = async (order: any, rawItems?: any[]): Promise<void> =>
 const OrderService = {
     async createOrder(
         userId: string,
-        items: Array<{ productId: string; productType: 'website' | 'software' | 'course'; title: string; price: number; image?: string }>,
+        items: Array<{ productId: string; productType: 'website' | 'design-template' | 'course'; title: string; price: number; image?: string }>,
         paymentMethod: string = 'stripe',
+
         paymentStatus: 'pending' | 'completed' | 'failed' | 'refunded' = 'pending'
     ): Promise<IOrder> {
         console.log(`Processing order for user: ${userId}, items count: ${items.length}`);

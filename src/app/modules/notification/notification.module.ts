@@ -31,7 +31,8 @@ const NotificationSchema = new Schema<INotification>(
     {
         type: {
             type: String,
-            enum: ['order', 'enrollment', 'review', 'user', 'course', 'system', 'like', 'blog'],
+            enum: ['order', 'enrollment', 'review', 'user', 'course', 'system', 'like', 'blog', 'design-template'],
+
             required: true,
         },
         title: {
@@ -173,7 +174,8 @@ export const NotificationService = {
         userName: string;
         productId: Types.ObjectId;
         productName: string;
-        productType: 'website' | 'software' | 'course';
+        productType: 'website' | 'software' | 'course' | 'design-template';
+
     }): Promise<INotification> {
         return this.createNotification({
             type: 'like',

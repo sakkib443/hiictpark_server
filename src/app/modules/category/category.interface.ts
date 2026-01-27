@@ -18,7 +18,8 @@ export interface ICategory {
     image?: string;         // Category thumbnail image
     parentCategory?: Types.ObjectId | ICategory | null;  // Parent category reference
     status: 'active' | 'inactive';
-    type: 'course' | 'website' | 'software'; // Type of category
+    type: 'course' | 'website' | 'software' | 'design-template'; // Type of category
+
     productCount: number;   // Total products in this category
     order: number;          // Display order
     isParent: boolean;      // Is this a parent category?

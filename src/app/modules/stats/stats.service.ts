@@ -6,7 +6,7 @@
 import { User } from '../user/user.model';
 import { Course } from '../course/course.model';
 import { Website } from '../website/website.model';
-import { Software } from '../software/software.model';
+import { DesignTemplate } from '../designTemplate/designTemplate.model';
 import { Enrollment } from '../enrollment/enrollment.model';
 import { Review } from '../review/review.module';
 
@@ -20,16 +20,16 @@ const getDashboardStats = async () => {
 
         // Count all products (approved/published status or all non-deleted)
         const totalCourses = await Course.countDocuments({ status: 'published' });
-        // Websites and Software use 'approved' status
+        // Websites and DesignTemplates use 'approved' status
         const totalWebsites = await Website.countDocuments({ status: 'approved', isDeleted: { $ne: true } });
-        const totalSoftware = await Software.countDocuments({ status: 'approved', isDeleted: { $ne: true } });
+        const totalDesignTemplates = await DesignTemplate.countDocuments({ status: 'approved', isDeleted: { $ne: true } });
 
         // Also count all (including pending) for better results if no approved items
         const allWebsites = await Website.countDocuments({ isDeleted: { $ne: true } });
-        const allSoftware = await Software.countDocuments({ isDeleted: { $ne: true } });
+        const allDesignTemplates = await DesignTemplate.countDocuments({ isDeleted: { $ne: true } });
         const allCourses = await Course.countDocuments({});
 
-        const totalProducts = (totalCourses || allCourses) + (totalWebsites || allWebsites) + (totalSoftware || allSoftware);
+        const totalProducts = (totalCourses || allCourses) + (totalWebsites || allWebsites) + (totalDesignTemplates || allDesignTemplates);
 
         // Count total enrollments/downloads
         const totalEnrollments = await Enrollment.countDocuments({});
@@ -52,12 +52,13 @@ const getDashboardStats = async () => {
             breakdown: {
                 courses: allCourses || totalCourses,
                 websites: allWebsites || totalWebsites,
-                software: allSoftware || totalSoftware,
+                designTemplates: allDesignTemplates || totalDesignTemplates,
                 users: totalUsers,
                 enrollments: totalEnrollments,
                 reviews: totalReviews
             }
         };
+
     } catch (error) {
         console.error('Error getting dashboard stats:', error);
         // Return defaults on error
@@ -69,7 +70,7 @@ const getDashboardStats = async () => {
             breakdown: {
                 courses: 0,
                 websites: 0,
-                software: 0,
+                designTemplates: 0,
                 users: 0,
                 enrollments: 0,
                 reviews: 0

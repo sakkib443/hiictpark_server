@@ -18,8 +18,9 @@ export interface IDownload {
     user: Types.ObjectId;
     order: Types.ObjectId;
     product: Types.ObjectId;
-    productType: 'website' | 'software';
-    productModel: 'Website' | 'Software';
+    productType: 'website' | 'design-template';
+    productModel: 'Website' | 'DesignTemplate';
+
     productTitle: string;
     downloadCount: number;
     maxDownloads: number;
@@ -36,8 +37,9 @@ const downloadSchema = new Schema<IDownload>(
         user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
         order: { type: Schema.Types.ObjectId, ref: 'Order', required: true },
         product: { type: Schema.Types.ObjectId, required: true, refPath: 'productModel' },
-        productType: { type: String, enum: ['website', 'software'], required: true },
-        productModel: { type: String, enum: ['Website', 'Software'], required: true },
+        productType: { type: String, enum: ['website', 'design-template'], required: true },
+        productModel: { type: String, enum: ['Website', 'DesignTemplate'], required: true },
+
         productTitle: { type: String, required: true },
         downloadCount: { type: Number, default: 0 },
         maxDownloads: { type: Number, default: 10 },
@@ -60,15 +62,17 @@ const DownloadService = {
         userId: string,
         orderId: string,
         productId: string,
-        productType: 'website' | 'software',
+        productType: 'website' | 'design-template',
         productTitle: string
+
     ): Promise<IDownload> {
         // Set expiry to 1 year from now
         const expiryDate = new Date();
         expiryDate.setFullYear(expiryDate.getFullYear() + 1);
 
         // Map productType to Mongoose model name
-        const productModel = productType === 'website' ? 'Website' : 'Software';
+        const productModel = productType === 'website' ? 'Website' : 'DesignTemplate';
+
 
         const download = await Download.create({
             user: userId,
