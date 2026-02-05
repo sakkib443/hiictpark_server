@@ -78,6 +78,8 @@ export interface ICourse {
     requirements: string[];           // Prerequisites
     whatYouWillLearn: string[];       // Learning outcomes
     targetAudience: string[];         // Who this course is for
+    jobOpportunities: string[];       // Job opportunities after course
+    softwareWeLearn: string[];        // Software tools taught in course
 
     // ==================== Status & Visibility ====================
     status: TCourseStatus;            // Draft/Published/Archived

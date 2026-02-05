@@ -172,6 +172,14 @@ const courseSchema = new Schema<ICourse, CourseModel>(
             type: [String],
             default: [],
         },
+        jobOpportunities: {
+            type: [String],
+            default: [],
+        },
+        softwareWeLearn: {
+            type: [String],
+            default: [],
+        },
 
         // ==================== Status & Visibility ====================
         status: {

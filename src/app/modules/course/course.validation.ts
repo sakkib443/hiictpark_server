@@ -80,6 +80,8 @@ const createCourseSchema = z.object({
         requirements: z.array(z.string()).optional(),
         whatYouWillLearn: z.array(z.string()).optional(),
         targetAudience: z.array(z.string()).optional(),
+        jobOpportunities: z.array(z.string()).optional(),
+        softwareWeLearn: z.array(z.string()).optional(),
 
         status: z.enum(['draft', 'published', 'archived']).optional().default('draft'),
         isFeatured: z.boolean().optional(),
@@ -129,6 +131,8 @@ const updateCourseSchema = z.object({
         requirements: z.array(z.string()).optional(),
         whatYouWillLearn: z.array(z.string()).optional(),
         targetAudience: z.array(z.string()).optional(),
+        jobOpportunities: z.array(z.string()).optional(),
+        softwareWeLearn: z.array(z.string()).optional(),
 
         status: z.enum(['draft', 'published', 'archived']).optional(),
         isFeatured: z.boolean().optional(),
