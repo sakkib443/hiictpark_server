@@ -68,6 +68,10 @@ const courseSchema = new Schema<ICourse, CourseModel>(
             ref: 'Category',
             required: [true, 'Category is required'],
         },
+        instructor: {
+            type: Schema.Types.ObjectId,
+            ref: 'Instructor',
+        },
         tags: {
             type: [String],
             default: [],

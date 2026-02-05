@@ -49,6 +49,7 @@ export interface ICourse {
 
     // ==================== Category & Tags ====================
     category: Types.ObjectId;         // Reference to Category
+    instructor?: Types.ObjectId;       // Reference to Instructor
     tags: string[];                   // Search tags
 
 

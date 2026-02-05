@@ -41,6 +41,7 @@ const createCourseSchema = z.object({
 
         category: z
             .string({ required_error: 'Category is required' }),
+        instructor: z.string().optional(),
 
         price: z
             .number({ required_error: 'Price is required' })
@@ -108,6 +109,7 @@ const updateCourseSchema = z.object({
         bannerImage: z.string().url().optional().or(z.literal('')),
 
         category: z.string().optional(),
+        instructor: z.string().optional(),
         tags: z.array(z.string()).optional(),
 
         price: z.number().min(0).optional(),

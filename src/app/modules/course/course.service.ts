@@ -148,6 +148,7 @@ const getAllCourses = async (
     // Execute query
     const courses = await Course.find(whereCondition)
         .populate('category', 'name nameEn icon')
+        .populate('instructor')
         .sort(sortConfig)
         .skip(skip)
         .limit(limit)
@@ -174,6 +175,7 @@ const getAllCourses = async (
 const getCourseById = async (id: string): Promise<ICourse | any | null> => {
     const course = await Course.findById(id)
         .populate('category', 'name nameEn icon')
+        .populate('instructor')
         .lean();
 
     if (!course) {
@@ -200,6 +202,7 @@ const getCourseById = async (id: string): Promise<ICourse | any | null> => {
 const getCourseBySlug = async (slug: string): Promise<ICourse | any | null> => {
     const course = await Course.findOne({ slug, status: 'published' })
         .populate('category', 'name nameEn icon')
+        .populate('instructor')
         .lean();
 
     if (!course) {
@@ -246,7 +249,7 @@ const updateCourse = async (
     const updatedCourse = await Course.findByIdAndUpdate(id, payload, {
         new: true,
         runValidators: true,
-    }).populate('category', 'name nameEn icon');
+    }).populate('category', 'name nameEn icon').populate('instructor');
 
     return updatedCourse;
 };
@@ -276,6 +279,7 @@ const deleteCourse = async (id: string): Promise<ICourse | null> => {
 const getFeaturedCourses = async (limit: number = 6): Promise<ICourse[]> => {
     const courses = await Course.find({ isFeatured: true, status: 'published' })
         .populate('category', 'name nameEn icon')
+        .populate('instructor')
         .sort({ createdAt: -1 })
         .limit(limit)
         .lean();
@@ -290,6 +294,7 @@ const getFeaturedCourses = async (limit: number = 6): Promise<ICourse[]> => {
 const getPopularCourses = async (limit: number = 6): Promise<ICourse[]> => {
     const courses = await Course.find({ status: 'published' })
         .populate('category', 'name nameEn icon')
+        .populate('instructor')
         .sort({ totalEnrollments: -1, averageRating: -1 })
         .limit(limit)
         .lean();

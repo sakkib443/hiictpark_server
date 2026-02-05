@@ -17,8 +17,8 @@ const createBatch = async (payload: IBatch): Promise<IBatch> => {
     if (!course) {
         throw new AppError(404, 'Course not found');
     }
-    if (course.courseType !== 'online') {
-        throw new AppError(400, 'Batches can only be created for online courses');
+    if (course.courseType === 'recorded') {
+        throw new AppError(400, 'Batches can only be created for online or offline courses, not recorded courses');
     }
 
     // Check for duplicate batch code

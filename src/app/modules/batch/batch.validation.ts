@@ -14,13 +14,13 @@ const scheduleSchema = z.object({
 
 const createBatchSchema = z.object({
     body: z.object({
-        course: z.string({ required_error: 'Course ID is required' }),
+        course: z.string({ required_error: 'Course ID is required' }).min(1, 'Course ID is required'),
         instructor: z.string().optional(),
-        batchName: z.string({ required_error: 'Batch name is required' }).min(1),
-        batchCode: z.string({ required_error: 'Batch code is required' }).min(1),
+        batchName: z.string({ required_error: 'Batch name is required' }).min(1, 'Batch name is required'),
+        batchCode: z.string({ required_error: 'Batch code is required' }).min(1, 'Batch code is required'),
         description: z.string().optional(),
-        startDate: z.string({ required_error: 'Start date is required' }),
-        endDate: z.string({ required_error: 'End date is required' }),
+        startDate: z.string({ required_error: 'Start date is required' }).min(1, 'Start date is required'),
+        endDate: z.string({ required_error: 'End date is required' }).min(1, 'End date is required'),
         enrollmentDeadline: z.string().optional(),
         maxStudents: z.number().min(1).default(50),
         schedule: z.array(scheduleSchema).optional(),

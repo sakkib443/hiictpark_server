@@ -31,7 +31,6 @@ router.get(
 
 router.get(
     '/course/:courseId',
-    authMiddleware,
     BatchController.getBatchesByCourse
 );
 
