@@ -2,11 +2,11 @@ import { z } from 'zod';
 
 const createInstructorSchema = z.object({
     body: z.object({
-        name: z.string({ required_error: 'Name is required' }),
-        designation: z.string({ required_error: 'Designation is required' }),
+        name: z.string({ required_error: 'Instructor name is required' }).min(2, 'Name must be at least 2 characters'),
+        designation: z.string().optional(),
         bio: z.string().optional(),
         image: z.string().optional(),
-        email: z.string().email().optional(),
+        email: z.string().email('Please enter a valid email address').optional().or(z.literal('')),
         phone: z.string().optional(),
         socialLinks: z.object({
             facebook: z.string().optional(),

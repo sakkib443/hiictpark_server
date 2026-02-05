@@ -4,7 +4,7 @@ import { IInstructor } from './instructor.interface';
 const instructorSchema = new Schema<IInstructor>(
     {
         name: { type: String, required: true },
-        designation: { type: String, required: true },
+        designation: { type: String },
         bio: { type: String },
         image: { type: String },
         email: { type: String },
