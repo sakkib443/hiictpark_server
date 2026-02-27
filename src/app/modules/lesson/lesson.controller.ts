@@ -53,6 +53,7 @@ const getAllLessons = async (req: Request, res: Response, next: NextFunction) =>
         const filters = {
             searchTerm: req.query.searchTerm as string,
             course: req.query.course as string,
+            module: req.query.module as string,
             isFree: req.query.isFree === 'true' ? true : req.query.isFree === 'false' ? false : undefined,
             isPublished: req.query.isPublished === 'true' ? true : req.query.isPublished === 'false' ? false : undefined,
         };

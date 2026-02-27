@@ -79,7 +79,7 @@ const getAllLessons = async (
     filters: ILessonFilters,
     paginationOptions: { page?: number; limit?: number }
 ) => {
-    const { searchTerm, course, isFree, isPublished } = filters;
+    const { searchTerm, course, module, isFree, isPublished } = filters;
     const { page = 1, limit = 10 } = paginationOptions;
     const skip = (page - 1) * limit;
 
@@ -92,6 +92,7 @@ const getAllLessons = async (
     }
 
     if (course) query.course = course;
+    if (module) query.module = module;
     if (isFree !== undefined) query.isFree = isFree;
     if (isPublished !== undefined) query.isPublished = isPublished;
 
