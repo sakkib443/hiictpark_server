@@ -187,7 +187,7 @@ const getCourseById = async (id: string): Promise<ICourse | any | null> => {
 
     // Populate curriculum (grouped lessons)
     const { LessonService } = await import('../lesson/lesson.service');
-    const curriculum = await LessonService.getGroupedLessons(id);
+    const curriculum = await LessonService.getGroupedLessons(id, true);
 
     return {
         ...course,
@@ -214,7 +214,7 @@ const getCourseBySlug = async (slug: string): Promise<ICourse | any | null> => {
 
     // Populate curriculum (grouped lessons)
     const { LessonService } = await import('../lesson/lesson.service');
-    const curriculum = await LessonService.getGroupedLessons(course._id.toString());
+    const curriculum = await LessonService.getGroupedLessons(course._id.toString(), true);
 
     return {
         ...course,

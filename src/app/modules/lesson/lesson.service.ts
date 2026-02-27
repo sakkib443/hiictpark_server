@@ -22,7 +22,10 @@ const createLesson = async (payload: Partial<ILesson>): Promise<ILesson> => {
     }
 
     // Create lesson
-    const lesson = await Lesson.create(payload);
+    const lesson = await Lesson.create({
+        ...payload,
+        isPublished: payload.isPublished !== undefined ? payload.isPublished : true,
+    });
 
     // Add lesson ID to Course.lessons array
     await Course.findByIdAndUpdate(payload.course, {
