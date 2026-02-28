@@ -60,6 +60,7 @@ const createCourseSchema = z.object({
             .or(z.literal('')),
 
         previewVideo: z.string().url().optional().or(z.literal('')),
+        sampleVideoUrl: z.string().url().optional().or(z.literal('')),
         bannerImage: z.string().url().optional().or(z.literal('')),
 
         tags: z.array(z.string()).optional(),
@@ -108,6 +109,7 @@ const updateCourseSchema = z.object({
 
         thumbnail: z.string().url().optional(),
         previewVideo: z.string().url().optional().or(z.literal('')),
+        sampleVideoUrl: z.string().url().optional().or(z.literal('')),
         bannerImage: z.string().url().optional().or(z.literal('')),
 
         category: z.string().optional(),

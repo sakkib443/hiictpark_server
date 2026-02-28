@@ -63,6 +63,14 @@ router.patch(
 
 // ==================== Admin Routes ====================
 
+// Admin: Get all enrollments
+router.get(
+    '/',
+    authMiddleware,
+    authorizeRoles('admin'),
+    EnrollmentController.getAllEnrollments
+);
+
 // Admin: Enroll a student manually
 router.post(
     '/admin/enroll',
@@ -77,6 +85,14 @@ router.get(
     authMiddleware,
     authorizeRoles('admin'),
     EnrollmentController.getCourseEnrollments
+);
+
+// Admin: Update enrollment (assign batch, etc.)
+router.patch(
+    '/admin/:id',
+    authMiddleware,
+    authorizeRoles('admin'),
+    EnrollmentController.updateEnrollment
 );
 
 // Admin: Cancel enrollment

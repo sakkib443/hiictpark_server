@@ -57,6 +57,10 @@ const courseSchema = new Schema<ICourse, CourseModel>(
             type: String,
             default: '',
         },
+        sampleVideoUrl: {
+            type: String,
+            default: '',
+        },
         bannerImage: {
             type: String,
             default: '',

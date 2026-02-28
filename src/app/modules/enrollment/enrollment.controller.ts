@@ -6,27 +6,25 @@
 
 import { Request, Response, NextFunction } from 'express';
 import { EnrollmentService } from './enrollment.service';
+import catchAsync from '../../utils/catchAsync';
+import sendResponse from '../../utils/sendResponse';
 
 /**
  * Enroll in a course
- * POST /api/enrollments
  */
-const enrollInCourse = async (req: Request, res: Response, next: NextFunction) => {
-    try {
-        const studentId = req.user!.userId;
-        const { courseId, orderId } = req.body;
+const enrollInCourse = catchAsync(async (req: Request, res: Response) => {
+    const studentId = req.user!.userId;
+    const { courseId, orderId } = req.body;
 
-        const enrollment = await EnrollmentService.enrollStudent(studentId, courseId, orderId);
+    const enrollment = await EnrollmentService.enrollStudent(studentId, courseId, orderId);
 
-        res.status(201).json({
-            success: true,
-            message: 'Successfully enrolled in the course',
-            data: enrollment,
-        });
-    } catch (error) {
-        next(error);
-    }
-};
+    sendResponse(res, {
+        statusCode: 201,
+        success: true,
+        message: 'Successfully enrolled in the course',
+        data: enrollment,
+    });
+});
 
 /**
  * Get my enrollments
@@ -162,109 +160,120 @@ const updateLastAccessed = async (req: Request, res: Response, next: NextFunctio
 
 /**
  * Admin: Enroll a student
- * POST /api/enrollments/admin/enroll
  */
-const adminEnrollStudent = async (req: Request, res: Response, next: NextFunction) => {
-    try {
-        const { studentId, courseId } = req.body;
-
-        const enrollment = await EnrollmentService.enrollStudent(studentId, courseId);
-
-        res.status(201).json({
-            success: true,
-            message: 'Student enrolled successfully',
-            data: enrollment,
-        });
-    } catch (error) {
-        next(error);
-    }
-};
+const adminEnrollStudent = catchAsync(async (req: Request, res: Response) => {
+    const { studentId, courseId } = req.body;
+    const enrollment = await EnrollmentService.enrollStudent(studentId, courseId);
+    sendResponse(res, {
+        statusCode: 201,
+        success: true,
+        message: 'Student enrolled successfully',
+        data: enrollment,
+    });
+});
 
 /**
  * Admin: Get course enrollments
- * GET /api/enrollments/admin/course/:courseId
  */
-const getCourseEnrollments = async (req: Request, res: Response, next: NextFunction) => {
-    try {
-        const { courseId } = req.params;
-        const { page, limit } = req.query;
+const getCourseEnrollments = catchAsync(async (req: Request, res: Response) => {
+    const { courseId } = req.params;
+    const { page, limit } = req.query;
+    const result = await EnrollmentService.getCourseEnrollments(courseId, {
+        page: page ? Number(page) : 1,
+        limit: limit ? Number(limit) : 20,
+    });
 
-        const result = await EnrollmentService.getCourseEnrollments(courseId, {
-            page: page ? Number(page) : 1,
-            limit: limit ? Number(limit) : 20,
-        });
-
-        res.status(200).json({
-            success: true,
-            message: 'Course enrollments retrieved',
-            data: result.data,
-            meta: result.meta,
-        });
-    } catch (error) {
-        next(error);
-    }
-};
+    sendResponse(res, {
+        statusCode: 200,
+        success: true,
+        message: 'Course enrollments retrieved',
+        data: result.data,
+        meta: result.meta,
+    });
+});
 
 /**
  * Admin: Cancel enrollment
- * PATCH /api/enrollments/admin/:id/cancel
  */
-const cancelEnrollment = async (req: Request, res: Response, next: NextFunction) => {
-    try {
-        const { id } = req.params;
-        const { reason } = req.body;
-
-        const enrollment = await EnrollmentService.cancelEnrollment(id, reason);
-
-        res.status(200).json({
-            success: true,
-            message: 'Enrollment cancelled',
-            data: enrollment,
-        });
-    } catch (error) {
-        next(error);
-    }
-};
+const cancelEnrollment = catchAsync(async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const { reason } = req.body;
+    const enrollment = await EnrollmentService.cancelEnrollment(id, reason);
+    sendResponse(res, {
+        statusCode: 200,
+        success: true,
+        message: 'Enrollment cancelled',
+        data: enrollment,
+    });
+});
 
 /**
  * Admin: Mark as completed
- * PATCH /api/enrollments/admin/:id/complete
  */
-const markAsCompleted = async (req: Request, res: Response, next: NextFunction) => {
-    try {
-        const { id } = req.params;
+const markAsCompleted = catchAsync(async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const enrollment = await EnrollmentService.markAsCompleted(id);
+    sendResponse(res, {
+        statusCode: 200,
+        success: true,
+        message: 'Enrollment marked as completed',
+        data: enrollment,
+    });
+});
 
-        const enrollment = await EnrollmentService.markAsCompleted(id);
+/**
+ * Admin: Get all enrollments
+ */
+const getAllEnrollments = catchAsync(async (req: Request, res: Response) => {
+    const { page, limit, status, courseId, studentId } = req.query;
+    const p = Number(page) || 1;
+    const l = Number(limit) || 20;
 
-        res.status(200).json({
-            success: true,
-            message: 'Enrollment marked as completed',
-            data: enrollment,
-        });
-    } catch (error) {
-        next(error);
-    }
-};
+    const result = await EnrollmentService.getAllEnrollments(
+        { status, courseId, studentId },
+        { page: p, limit: l }
+    );
+
+    sendResponse(res, {
+        statusCode: 200,
+        success: true,
+        message: 'Enrollments retrieved successfully',
+        data: result.data,
+        meta: {
+            total: result.total,
+            page: p,
+            limit: l,
+            totalPages: Math.ceil(result.total / l)
+        }
+    });
+});
+
+/**
+ * Admin: Update enrollment
+ */
+const updateEnrollment = catchAsync(async (req: Request, res: Response) => {
+    const enrollment = await EnrollmentService.updateEnrollment(req.params.id, req.body);
+    sendResponse(res, {
+        statusCode: 200,
+        success: true,
+        message: 'Enrollment updated successfully',
+        data: enrollment,
+    });
+});
 
 /**
  * Get enrollment by ID
  * GET /api/enrollments/:id
  */
-const getEnrollmentById = async (req: Request, res: Response, next: NextFunction) => {
-    try {
-        const { id } = req.params;
-
-        const enrollment = await EnrollmentService.getEnrollmentById(id);
-
-        res.status(200).json({
-            success: true,
-            message: 'Enrollment retrieved',
-            data: enrollment,
-        });
-    } catch (error) {
-        next(error);
-    }
-};
+const getEnrollmentById = catchAsync(async (req: Request, res: Response) => {
+    const enrollment = await EnrollmentService.getEnrollmentById(req.params.id);
+    sendResponse(res, {
+        statusCode: 200,
+        success: true,
+        message: 'Enrollment retrieved successfully',
+        data: enrollment
+    });
+});
 
 export const EnrollmentController = {
     enrollInCourse,
@@ -276,6 +285,8 @@ export const EnrollmentController = {
     updateLastAccessed,
     adminEnrollStudent,
     getCourseEnrollments,
+    getAllEnrollments,
+    updateEnrollment,
     cancelEnrollment,
     markAsCompleted,
     getEnrollmentById,

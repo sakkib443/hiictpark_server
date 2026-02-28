@@ -308,8 +308,15 @@ const AnalyticsService = {
             const idx = monthToIdx[key];
 
             if (idx !== undefined) {
+                // Calculate the ratio of total paid amount vs original item sum
+                // This ensures that discounts/coupons are proportionally reflected in the category revenue
+                const itemsSum = order.items?.reduce((sum: number, i: any) => sum + (i.price || 0), 0) || 1;
+                const netAmount = order.totalAmount || itemsSum;
+                const discountRatio = netAmount / itemsSum;
+
                 order.items?.forEach((item: any) => {
-                    const amount = item.price || 0;
+                    const price = item.price || 0;
+                    const amount = price * discountRatio;
                     const productType = item.productType?.toLowerCase() || '';
 
                     if (productType === 'course') {
@@ -319,7 +326,6 @@ const AnalyticsService = {
                     } else if (productType === 'design-template' || productType === 'software') {
                         designTemplateRevenue[idx] += amount;
                     }
-
                 });
             }
         });

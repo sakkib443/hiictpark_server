@@ -44,6 +44,8 @@ export interface IOrder {
         time: string;
         date: string;
     };
+    discountAmount: number;
+    couponCode?: string;
     createdAt?: Date;
     updatedAt?: Date;
 }
@@ -78,6 +80,8 @@ const orderSchema = new Schema<IOrder>(
             time: { type: String },
             date: { type: String }
         },
+        discountAmount: { type: Number, default: 0 },
+        couponCode: { type: String },
         orderDate: { type: Date, default: Date.now },
     },
     { timestamps: true }
@@ -104,6 +108,8 @@ export const createOrderValidation = z.object({
         ).min(1, 'At least one item is required'),
         paymentMethod: z.string().optional(),
         paymentStatus: z.enum(['pending', 'completed', 'failed', 'refunded']).optional(),
+        discountAmount: z.number().optional(),
+        couponCode: z.string().optional(),
     }),
 });
 
@@ -193,8 +199,9 @@ const OrderService = {
         userId: string,
         items: Array<{ productId: string; productType: 'website' | 'design-template' | 'course'; title: string; price: number; image?: string }>,
         paymentMethod: string = 'stripe',
-
-        paymentStatus: 'pending' | 'completed' | 'failed' | 'refunded' = 'pending'
+        paymentStatus: 'pending' | 'completed' | 'failed' | 'refunded' = 'pending',
+        discountAmount: number = 0,
+        couponCode?: string
     ): Promise<IOrder> {
         console.log(`Processing order for user: ${userId}, items count: ${items.length}`);
 
@@ -206,13 +213,15 @@ const OrderService = {
             image: item.image,
         }));
 
-        const totalAmount = items.reduce((sum, item) => sum + item.price, 0);
+        const totalAmount = Math.max(0, items.reduce((sum, item) => sum + item.price, 0) - discountAmount);
 
         const order = await Order.create({
             orderNumber: generateOrderNumber(),
             user: userId,
             items: orderItems,
             totalAmount,
+            discountAmount,
+            couponCode,
             paymentMethod,
             paymentStatus,
             orderDate: new Date(),
@@ -309,13 +318,46 @@ const OrderService = {
         if (!updatedOrder) throw new AppError(404, 'Order not found');
         return updatedOrder;
     },
+
+    async deleteOrder(orderId: string): Promise<void> {
+        const order = await Order.findById(orderId);
+        if (!order) throw new AppError(404, 'Order not found');
+
+        const userId = order.user.toString();
+
+        // Check if there are any course enrollments related to this order and delete them
+        for (const item of order.items) {
+            if (item.productType === 'course') {
+                try {
+                    const productId = item.product;
+                    const { Enrollment } = await import('../enrollment/enrollment.model');
+
+                    // Delete the specific enrollment linked to this user, course, and optionally order
+                    const deleted = await Enrollment.findOneAndDelete({
+                        student: userId,
+                        course: productId
+                    });
+
+                    // Decrement totalEnrollments for course if an enrollment was actually deleted
+                    if (deleted) {
+                        const { Course } = await import('../course/course.model');
+                        await Course.findByIdAndUpdate(productId, { $inc: { totalEnrollments: -1 } });
+                    }
+                } catch (err) {
+                    console.error('Error deleting related enrollment:', err);
+                }
+            }
+        }
+
+        await Order.findByIdAndDelete(orderId);
+    },
 };
 
 // ==================== CONTROLLER ====================
 const OrderController = {
     createOrder: catchAsync(async (req: Request, res: Response) => {
-        const { items, paymentMethod, paymentStatus } = req.body;
-        const order = await OrderService.createOrder(req.user!.userId, items, paymentMethod, paymentStatus);
+        const { items, paymentMethod, paymentStatus, discountAmount, couponCode } = req.body;
+        const order = await OrderService.createOrder(req.user!.userId, items, paymentMethod, paymentStatus, discountAmount, couponCode);
         sendResponse(res, { statusCode: 201, success: true, message: 'Order created', data: order });
     }),
 
@@ -364,6 +406,11 @@ const OrderController = {
         const order = await OrderService.submitManualPayment(orderId, userId, req.body);
         sendResponse(res, { statusCode: 200, success: true, message: 'Manual payment submitted successfully', data: order });
     }),
+
+    deleteOrder: catchAsync(async (req: Request, res: Response) => {
+        await OrderService.deleteOrder(req.params.id);
+        sendResponse(res, { statusCode: 200, success: true, message: 'Order and associated records deleted successfully', data: null });
+    }),
 };
 
 // ==================== ROUTES ====================
@@ -377,6 +424,7 @@ router.patch('/:id/manual-payment', authMiddleware, OrderController.submitManual
 // Admin
 router.get('/admin/all', authMiddleware, authorizeRoles('admin'), OrderController.getAllOrders);
 router.patch('/admin/:id/status', authMiddleware, authorizeRoles('admin'), OrderController.updateOrderStatus);
+router.delete('/admin/:id', authMiddleware, authorizeRoles('admin'), OrderController.deleteOrder);
 
 export const OrderRoutes = router;
 export default OrderService;

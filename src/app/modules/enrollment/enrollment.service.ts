@@ -317,12 +317,52 @@ const markAsCompleted = async (enrollmentId: string): Promise<IEnrollment | null
     return enrollment;
 };
 
+/**
+ * Get all enrollments for Admin with optional filters
+ */
+const getAllEnrollments = async (
+    filters: any,
+    pagination: { page: number; limit: number }
+) => {
+    const { page, limit } = pagination;
+    const skip = (page - 1) * limit;
+
+    const query: any = {};
+    if (filters.status) query.status = filters.status;
+    if (filters.courseId) query.course = filters.courseId;
+    if (filters.studentId) query.student = filters.studentId;
+
+    const enrollments = await Enrollment.find(query)
+        .populate('student', 'firstName lastName email phone avatar')
+        .populate('course', 'title titleBn slug thumbnail')
+        .populate('batch', 'batchName batchCode')
+        .sort({ enrolledAt: -1 })
+        .skip(skip)
+        .limit(limit);
+
+    const total = await Enrollment.countDocuments(query);
+
+    return { data: enrollments, total };
+};
+
+/**
+ * Update enrollment (e.g., assign batch)
+ */
+const updateEnrollment = async (id: string, payload: any) => {
+    return await Enrollment.findByIdAndUpdate(id, payload, { new: true })
+        .populate('student', 'firstName lastName email')
+        .populate('course', 'title')
+        .populate('batch', 'batchName');
+};
+
 export const EnrollmentService = {
     enrollStudent,
     getEnrollmentById,
     getStudentCourseEnrollment,
     getStudentEnrollments,
     getCourseEnrollments,
+    getAllEnrollments,
+    updateEnrollment,
     updateProgress,
     updateLastAccessed,
     isEnrolled,

@@ -45,6 +45,7 @@ export interface ICourse {
     // ==================== Media ====================
     thumbnail: string;                // Course thumbnail image
     previewVideo?: string;            // Free preview video URL
+    sampleVideoUrl?: string;          // Sample lesson video URL
     bannerImage?: string;             // Banner for course page
 
     // ==================== Category & Tags ====================
