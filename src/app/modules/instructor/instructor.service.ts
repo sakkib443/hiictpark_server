@@ -2,6 +2,15 @@ import { IInstructor } from './instructor.interface';
 import { Instructor } from './instructor.model';
 
 const createInstructor = async (payload: IInstructor): Promise<IInstructor> => {
+    // Sanitize specialization if it comes as a string
+    if (typeof payload.specialization === 'string') {
+        payload.specialization = (payload.specialization as string).split(',').map(s => s.trim()).filter(s => s !== '');
+    }
+
+    // Sanitize user field to prevent Mongoose CastError if it's an empty string
+    if ((payload.user as any) === '' || (payload.user as any) === 'none' || payload.user === undefined) {
+        payload.user = null as any;
+    }
     const result = await Instructor.create(payload);
     return result;
 };
@@ -28,6 +37,15 @@ const getSingleInstructor = async (id: string): Promise<IInstructor | null> => {
 };
 
 const updateInstructor = async (id: string, payload: Partial<IInstructor>): Promise<IInstructor | null> => {
+    // Sanitize specialization if it comes as a string
+    if (typeof payload.specialization === 'string') {
+        payload.specialization = (payload.specialization as string).split(',').map(s => s.trim()).filter(s => s !== '');
+    }
+
+    // Sanitize user field
+    if ((payload.user as any) === '' || (payload.user as any) === 'none' || payload.user === null || payload.user === undefined) {
+        payload.user = null as any;
+    }
     const result = await Instructor.findByIdAndUpdate(id, payload, {
         new: true,
         runValidators: true,
