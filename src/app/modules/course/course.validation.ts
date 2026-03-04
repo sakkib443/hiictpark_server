@@ -83,6 +83,10 @@ const createCourseSchema = z.object({
         targetAudience: z.array(z.string()).optional(),
         jobOpportunities: z.array(z.string()).optional(),
         softwareWeLearn: z.array(z.string()).optional(),
+        faq: z.array(z.object({
+            question: z.string().min(1, 'Question is required'),
+            answer: z.string().min(1, 'Answer is required'),
+        })).optional(),
 
         status: z.enum(['draft', 'published', 'archived']).optional().default('draft'),
         isFeatured: z.boolean().optional(),
@@ -135,6 +139,10 @@ const updateCourseSchema = z.object({
         targetAudience: z.array(z.string()).optional(),
         jobOpportunities: z.array(z.string()).optional(),
         softwareWeLearn: z.array(z.string()).optional(),
+        faq: z.array(z.object({
+            question: z.string().min(1, 'Question is required'),
+            answer: z.string().min(1, 'Answer is required'),
+        })).optional(),
 
         status: z.enum(['draft', 'published', 'archived']).optional(),
         isFeatured: z.boolean().optional(),

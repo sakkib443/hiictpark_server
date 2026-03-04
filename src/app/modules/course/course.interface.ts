@@ -27,6 +27,15 @@ export type TCourseLanguage = 'bangla' | 'english' | 'both';
 export type TCourseStatus = 'draft' | 'published' | 'archived';
 
 /**
+ * IFAQ - FAQ Item Interface
+ * প্রতিটি FAQ আইটেমের structure
+ */
+export interface IFAQ {
+    question: string;
+    answer: string;
+}
+
+/**
  * ICourse - Main Course Interface
  * Database এ যে format এ course data save হবে
  */
@@ -81,6 +90,7 @@ export interface ICourse {
     targetAudience: string[];         // Who this course is for
     jobOpportunities: string[];       // Job opportunities after course
     softwareWeLearn: string[];        // Software tools taught in course
+    faq: IFAQ[];                      // Frequently Asked Questions
 
     // ==================== Status & Visibility ====================
     status: TCourseStatus;            // Draft/Published/Archived

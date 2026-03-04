@@ -184,6 +184,13 @@ const courseSchema = new Schema<ICourse, CourseModel>(
             type: [String],
             default: [],
         },
+        faq: {
+            type: [{
+                question: { type: String, required: true },
+                answer: { type: String, required: true },
+            }],
+            default: [],
+        },
 
         // ==================== Status & Visibility ====================
         status: {
