@@ -113,6 +113,37 @@ export const createOrderValidation = z.object({
     }),
 });
 
+export const guestCheckoutValidation = z.object({
+    body: z.object({
+        fullName: z.string({
+            required_error: 'Full Name is required',
+        }).min(1, 'Full Name is required'),
+        email: z.string({
+            required_error: 'Email is required',
+        }).email('Please provide a valid email'),
+        phone: z.string({
+            required_error: 'Phone Number is required',
+        }).min(11, 'Phone Number must be at least 11 digits'),
+        address: z.string().optional(),
+        items: z.array(
+            z.object({
+                productId: z.string(),
+                productType: z.enum(['website', 'design-template', 'course']),
+                title: z.string(),
+                price: z.number(),
+                image: z.string().optional(),
+            })
+        ).min(1, 'At least one item is required'),
+        paymentMethod: z.string().optional(),
+        manualMethod: z.string().optional(),
+        senderNumber: z.string().optional(),
+        transactionId: z.string().optional(),
+        time: z.string().optional(),
+        date: z.string().optional(),
+        discountAmount: z.number().optional(),
+        couponCode: z.string().optional(),
+    })
+});
 // ==================== SERVICE ====================
 // Generate unique order number
 const generateOrderNumber = (): string => {
@@ -534,7 +565,7 @@ const OrderController = {
 const router = express.Router();
 
 // Guest checkout - No auth required
-router.post('/guest-checkout', OrderController.guestCheckout);
+router.post('/guest-checkout', validateRequest(guestCheckoutValidation), OrderController.guestCheckout);
 
 router.post('/', authMiddleware, validateRequest(createOrderValidation), OrderController.createOrder);
 router.get('/my', authMiddleware, OrderController.getMyOrders);
