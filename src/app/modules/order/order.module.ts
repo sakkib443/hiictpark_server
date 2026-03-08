@@ -411,10 +411,130 @@ const OrderController = {
         await OrderService.deleteOrder(req.params.id);
         sendResponse(res, { statusCode: 200, success: true, message: 'Order and associated records deleted successfully', data: null });
     }),
+
+    // Guest Checkout - No login required
+    guestCheckout: catchAsync(async (req: Request, res: Response) => {
+        const {
+            fullName, email, phone, address,
+            items, paymentMethod, manualMethod,
+            senderNumber, transactionId, time, date,
+            discountAmount, couponCode
+        } = req.body;
+
+        // Step 1: Check if user exists, if not create one
+        let userId: string;
+        let tokens: any = null;
+        let userData: any = null;
+        let isNewUser = false;
+
+        const existingUser = await User.findOne({ email, isDeleted: { $ne: true } });
+
+        if (existingUser) {
+            // User exists - use their ID
+            userId = existingUser._id!.toString();
+
+            // Generate tokens for auto-login
+            const AuthService = (await import('../auth/auth.service')).default;
+            const jwtPayload = {
+                userId: existingUser._id!.toString(),
+                email: existingUser.email,
+                role: existingUser.role as 'admin' | 'mentor' | 'student',
+            };
+            tokens = AuthService.generateTokens(jwtPayload);
+            userData = {
+                _id: existingUser._id!.toString(),
+                email: existingUser.email,
+                firstName: existingUser.firstName,
+                lastName: existingUser.lastName,
+                role: existingUser.role,
+                avatar: existingUser.avatar,
+            };
+        } else {
+            // Create new user with email as ID, phone as password
+            const nameParts = fullName.trim().split(' ');
+            const firstName = nameParts[0] || 'User';
+            const lastName = nameParts.slice(1).join(' ') || '';
+
+            const newUser = await User.create({
+                email,
+                password: phone, // Phone number as password
+                firstName,
+                lastName,
+                phone,
+                address,
+                role: 'student',
+                status: 'active',
+                isEmailVerified: false,
+            });
+
+            userId = newUser._id!.toString();
+            isNewUser = true;
+
+            // Generate tokens for auto-login
+            const AuthService = (await import('../auth/auth.service')).default;
+            const jwtPayload = {
+                userId: newUser._id!.toString(),
+                email: newUser.email,
+                role: newUser.role as 'admin' | 'mentor' | 'student',
+            };
+            tokens = AuthService.generateTokens(jwtPayload);
+            userData = {
+                _id: newUser._id!.toString(),
+                email: newUser.email,
+                firstName: newUser.firstName,
+                lastName: newUser.lastName,
+                role: newUser.role,
+                avatar: newUser.avatar,
+            };
+
+            // Send welcome email (async)
+            EmailService.sendWelcomeEmail(newUser.email, newUser.firstName).catch(err =>
+                console.error('Welcome email error:', err)
+            );
+        }
+
+        // Step 2: Create Order
+        const order = await OrderService.createOrder(
+            userId,
+            items,
+            paymentMethod || 'manual',
+            'pending',
+            discountAmount || 0,
+            couponCode
+        );
+
+        // Step 3: Submit manual payment details
+        if (paymentMethod === 'manual' && senderNumber && transactionId) {
+            await OrderService.submitManualPayment(order._id!.toString(), userId, {
+                method: manualMethod || 'bkash',
+                senderNumber,
+                transactionId,
+                time: time || '',
+                date: date || new Date().toISOString().split('T')[0],
+            });
+        }
+
+        sendResponse(res, {
+            statusCode: 201,
+            success: true,
+            message: isNewUser
+                ? 'Order placed & account created successfully!'
+                : 'Order placed successfully!',
+            data: {
+                order,
+                user: userData,
+                tokens,
+                isNewUser,
+            },
+        });
+    }),
 };
 
 // ==================== ROUTES ====================
 const router = express.Router();
+
+// Guest checkout - No auth required
+router.post('/guest-checkout', OrderController.guestCheckout);
 
 router.post('/', authMiddleware, validateRequest(createOrderValidation), OrderController.createOrder);
 router.get('/my', authMiddleware, OrderController.getMyOrders);
@@ -428,3 +548,4 @@ router.delete('/admin/:id', authMiddleware, authorizeRoles('admin'), OrderContro
 
 export const OrderRoutes = router;
 export default OrderService;
+
