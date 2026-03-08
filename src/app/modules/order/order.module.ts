@@ -123,25 +123,25 @@ export const guestCheckoutValidation = z.object({
         }).email('Please provide a valid email'),
         phone: z.string({
             required_error: 'Phone Number is required',
-        }).min(11, 'Phone Number must be at least 11 digits'),
-        address: z.string().optional(),
+        }).min(6, 'Phone Number is too short'),
+        address: z.string().optional().default(''),
         items: z.array(
             z.object({
                 productId: z.string(),
                 productType: z.enum(['website', 'design-template', 'course']),
                 title: z.string(),
-                price: z.number(),
-                image: z.string().optional(),
+                price: z.coerce.number(),
+                image: z.string().optional().default(''),
             })
         ).min(1, 'At least one item is required'),
-        paymentMethod: z.string().optional(),
-        manualMethod: z.string().optional(),
-        senderNumber: z.string().optional(),
-        transactionId: z.string().optional(),
-        time: z.string().optional(),
-        date: z.string().optional(),
-        discountAmount: z.number().optional(),
-        couponCode: z.string().optional(),
+        paymentMethod: z.string().optional().default('manual'),
+        manualMethod: z.string().optional().default('bkash'),
+        senderNumber: z.string().optional().default(''),
+        transactionId: z.string().optional().default(''),
+        time: z.string().optional().default(''),
+        date: z.string().optional().default(''),
+        discountAmount: z.coerce.number().optional().default(0),
+        couponCode: z.string().optional().default(''),
     })
 });
 // ==================== SERVICE ====================
