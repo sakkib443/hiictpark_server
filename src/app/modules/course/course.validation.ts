@@ -66,6 +66,7 @@ const createCourseSchema = z.object({
         tags: z.array(z.string()).optional(),
 
         discountPrice: z.number().min(0).optional(),
+        priceLabel: z.string().max(100).optional().or(z.literal('')),
         currency: z.enum(['BDT', 'USD']).optional().default('BDT'),
         isFree: z.boolean().optional(),
 
@@ -122,6 +123,7 @@ const updateCourseSchema = z.object({
 
         price: z.number().min(0).optional(),
         discountPrice: z.number().min(0).optional().nullable(),
+        priceLabel: z.string().max(100).optional().or(z.literal('')),
         currency: z.enum(['BDT', 'USD']).optional(),
         isFree: z.boolean().optional(),
 

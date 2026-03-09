@@ -66,6 +66,7 @@ export interface ICourse {
     // ==================== Pricing ====================
     price: number;                    // Regular price
     discountPrice?: number;           // Sale price
+    priceLabel?: string;              // Custom price text (e.g. 'ফ্রি', 'যোগাযোগ করুন')
     currency: 'BDT' | 'USD';          // Currency
     isFree: boolean;                  // Is it a free course?
 

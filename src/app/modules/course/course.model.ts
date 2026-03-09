@@ -92,6 +92,12 @@ const courseSchema = new Schema<ICourse, CourseModel>(
             type: Number,
             min: [0, 'Discount price cannot be negative'],
         },
+        priceLabel: {
+            type: String,
+            trim: true,
+            maxlength: [100, 'Price label cannot exceed 100 characters'],
+            default: '',
+        },
         currency: {
             type: String,
             enum: {
