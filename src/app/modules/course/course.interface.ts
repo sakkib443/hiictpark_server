@@ -33,6 +33,8 @@ export type TCourseStatus = 'draft' | 'published' | 'archived';
 export interface IFAQ {
     question: string;
     answer: string;
+    questionBn?: string;
+    answerBn?: string;
 }
 
 /**
@@ -86,11 +88,17 @@ export interface ICourse {
 
     // ==================== Content Info ====================
     features: string[];               // What's included
+    featuresBn?: string[];            // What's included (Bengali)
     requirements: string[];           // Prerequisites
+    requirementsBn?: string[];        // Prerequisites (Bengali)
     whatYouWillLearn: string[];       // Learning outcomes
+    whatYouWillLearnBn?: string[];    // Learning outcomes (Bengali)
     targetAudience: string[];         // Who this course is for
+    targetAudienceBn?: string[];      // Who this course is for (Bengali)
     jobOpportunities: string[];       // Job opportunities after course
+    jobOpportunitiesBn?: string[];    // Job opportunities (Bengali)
     softwareWeLearn: string[];        // Software tools taught in course
+    softwareWeLearnBn?: string[];     // Software tools (Bengali)
     faq: IFAQ[];                      // Frequently Asked Questions
 
     // ==================== Status & Visibility ====================
