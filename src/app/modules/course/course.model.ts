@@ -170,7 +170,15 @@ const courseSchema = new Schema<ICourse, CourseModel>(
             type: [String],
             default: [],
         },
+        featuresBn: {
+            type: [String],
+            default: [],
+        },
         requirements: {
+            type: [String],
+            default: [],
+        },
+        requirementsBn: {
             type: [String],
             default: [],
         },
@@ -178,7 +186,15 @@ const courseSchema = new Schema<ICourse, CourseModel>(
             type: [String],
             default: [],
         },
+        whatYouWillLearnBn: {
+            type: [String],
+            default: [],
+        },
         targetAudience: {
+            type: [String],
+            default: [],
+        },
+        targetAudienceBn: {
             type: [String],
             default: [],
         },
@@ -186,7 +202,15 @@ const courseSchema = new Schema<ICourse, CourseModel>(
             type: [String],
             default: [],
         },
+        jobOpportunitiesBn: {
+            type: [String],
+            default: [],
+        },
         softwareWeLearn: {
+            type: [String],
+            default: [],
+        },
+        softwareWeLearnBn: {
             type: [String],
             default: [],
         },
@@ -194,6 +218,8 @@ const courseSchema = new Schema<ICourse, CourseModel>(
             type: [{
                 question: { type: String, required: true },
                 answer: { type: String, required: true },
+                questionBn: { type: String },
+                answerBn: { type: String },
             }],
             default: [],
         },
